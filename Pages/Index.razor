@@ -9,10 +9,10 @@
         {
             @foreach (var sPizza in sPizzas)
             {
-                <li style="background-image: url('@sPizza.ImageUrl')">
+                <li @onclick="@(() => ShowConfigureDialog(sPizza))" style="background-image: url('@sPizza.ImageUrl')">
                     <div class="pizza-info">
                         <span class="title">@sPizza.Name</span>
-                            @sPizza.Description
+                        @sPizza.Description
                         <span class="price">@sPizza.GetFormattedBasePrice()</span>
                     </div>
                 </li>
@@ -21,13 +21,32 @@
     </ul>
 </div>
 
+@if (showingConfiguringDialog)
+{
+    <ConfigurePizzaDialog Pizza="configuringPizza"/>
+}
+
 @code {
     List<PizzaSpecial> sPizzas = new();
+    Pizza configuringPizza;
+    bool showingConfiguringDialog;
 
-        protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+        sPizzas = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
+    }
+
+    void ShowConfigureDialog (PizzaSpecial special)
+    {
+        configuringPizza = new Pizza()
         {
-            sPizzas = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
-        }
+            Special = special,
+            SpecialId = special.Id,
+            Size = Pizza.DefaultSize
+        };
+
+        showingConfiguringDialog = true;
+    }
 }
 		
 
