@@ -4,7 +4,6 @@
 @using BlazingPizza.Services;
 @inject OrderState OrderState;
 
-
 <div class="main">
     <h1>Blazing Pizzas</h1>
     <ul class="pizza-cards">
@@ -12,20 +11,18 @@
     {
         @foreach (var special in sPizzas)
         {
-        <li @onclick="@(() => OrderState.ShowConfiguringPizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
-            <div class="pizza-info">
-            <span class="title">@special.Name</span>
-            @special.Description
-            <span class="price">@special.GetFormattedBasePrice()</span>
-            </div>
-        </li>
+            <li @onclick="@(() => OrderState.ShowConfiguringPizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
+                <div class="pizza-info">
+                <span class="title">@special.Name</span>
+                    @special.Description
+                <span class="price">@special.GetFormattedBasePrice()</span>
+                </div>
+            </li>
         }
     }
     </ul>
 </div>
 
-
-<!-- Configure Pizza Dialog -->
 @if (OrderState.ShowingConfigureDialog)
 {
     <ConfigurePizzaDialog 
